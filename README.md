@@ -1,6 +1,6 @@
 # HKEnum
 ## About
-  HKEnum is a simple open source information gathering tool about the target web application
+  HKEnumerator is a small project gathering informations abou a target web application such as admin panel path as well parsing the links from the source code of the web app. make sure cloning it on the localhost or a local server 
   
  ![Programmer and Problems solver](https://raw.githubusercontent.com/hamza07-w/HKEnum/main/ab.jpg)
 
