@@ -45,7 +45,7 @@ function adminPanel($wordlist)
 	$target = get_url();
 	foreach ($wordlist as $key => $admin) {
 		$path = "https://" . $target . "/" . $admin;
-		$headers = (@get_headers($path)) or die('<h2 style="color:red;">Check your Internet connetion</h2>'); # get the headers of the request
+		$headers = (@get_headers($path)) or die('<h2 style="color:red;">Unable Connection with '.get_url().'</h2>'); # get the headers of the request
 		$result = substr($headers[0], 9, 3); # parse the headers to get only the status code : 200, 404, 301 ...
 		$result = explode("\n", $result);
 		# check if the url exist
@@ -60,7 +60,7 @@ function linksEnum()
 {
 	# parse all links from the source code of rhe reponse
 	
-	$html = (@file_get_contents("https://".get_url())) or die('<h2 style="color:red;">Check your Internet connetion</h2>');
+	$html = (@file_get_contents("https://".get_url())) or die('<h2 style="color:red;">Unable Connection with '.get_url().'</h2>');
 	$myVar = htmlspecialchars($html, ENT_QUOTES);
 	$myVar = explode(" ", $myVar);
 	$result = array();
@@ -93,7 +93,7 @@ function getJson()
 {
 	# read Json reponse from whatcms API
 	$api = "https://whatcms.org/API/Tech?key=746f350b4b16644cd12fdb77a8ea14155c083cd3269036b30126e423ba0d7d61ffdd4f&url=";
-	$html = (@file_get_contents($api . get_url())) or die('<h2 style="color:red;">Check your Internet connetion</h2>');
+	$html = (@file_get_contents($api . get_url())) or die('<h2 style="color:red;">Unable Connection with '.get_url().'</h2>');
 	$json_a = json_decode($html, true); # convert reponse data from string to Json
 	return $json_a;
 }
@@ -103,22 +103,20 @@ function cmsRecon()
 	# cms recon is enumerate the target in case its built with a cms
 	$data = getJson();
 	if ($data["result"]["code"] == 200) {
-		echo "<pre>";
 		# web application technologies enumeration
 		#print_r($data["results"]);
-		echo '<h2 style="color:green;">BUILT WITH ' . '</h4><br><br>';
-		echo "<h3>" . $data["results"][0]["name"] . " " . @$data["results"][0]["version"] . "</h3>";
+		echo '<h2 style="color:blue;">BUILT WITH ' . '</h2>';
+		echo "<h4>" . $data["results"][0]["name"] . " " . @$data["results"][0]["version"] . "</h4>";
 		for ( $i = 1; $i <= 3; $i++) {
-			echo "<h3>" . $data["results"][$i]["name"] . "</h3>";
+			echo "<h4>" . @$data["results"][$i]["name"] . "</h4>";
 		}
 		#print_r($data["meta"]);
 		# social media accounts enumeration
 
-		echo '<br><br><h2 style="color:green;">' . "SOCIAL MEDIA RECON " . "</h2><br><br>";
-		foreach ($data["meta"]["social"] as $index => $account) {
-			echo "<h3>" . $account["network"] . " ==> " . $account["url"] . "</h3>" ;
-		}
-		echo "</pre>";	
+		echo '<br><h2 style="color:blue;">' . "SOCIAL MEDIA RECON " . "</h2>";
+		foreach (@$data["meta"]["social"] as $index => $account) {
+			echo '<h4><span style="color:green;text-transform: capitalize;">' . $account["network"] . '</span> ==> ' . $account["url"] . '</h4>' ;
+		}	
 	}
 	else {
 		echo '<h4 style="color:red;">[-] No CMS found!</h4>';
